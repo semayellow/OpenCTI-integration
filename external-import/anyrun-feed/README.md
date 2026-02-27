@@ -1,184 +1,81 @@
-# OpenCTI ANY.RUN Feed Connector
+<p align="center">
+    <a href="#readme">
+        <img alt="ANY.RUN logo" src="https://raw.githubusercontent.com/anyrun/anyrun-sdk/b3dfde1d3aa018d0a1c3b5d0fa8aaa652e80d883/static/logo.svg">
+    </a>
+</p>
 
-| Status | Date | Comment |
-|--------|------|---------|
-| Community | -    | -       |
+______________________________________________________________________
 
-The ANY.RUN connector imports threat intelligence feed data from the ANY.RUN Interactive Online Malware Sandbox into OpenCTI.
+## ANY.RUN Threat Intelligence Feeds connector for OpenCTI 
 
-## Table of Contents
+ANY.RUN’s [Threat Intelligence Feeds](https://any.run/threat-intelligence-feeds/?utm_source=anyrungithub&utm_medium=documentation&utm_campaign=opencti_feeds&utm_content=linktofeedslanding) (TI Feeds) is a continuously updated source of fresh network-based Indicators of Compromise (IOCs): IPs, domains, and URLs. 
 
-- [OpenCTI ANY.RUN Feed Connector](#opencti-anyrun-feed-connector)
-  - [Table of Contents](#table-of-contents)
-  - [Introduction](#introduction)
-  - [Installation](#installation)
-    - [Requirements](#requirements)
-  - [Configuration variables](#configuration-variables)
-    - [OpenCTI environment variables](#opencti-environment-variables)
-    - [Base connector environment variables](#base-connector-environment-variables)
-    - [Connector extra parameters environment variables](#connector-extra-parameters-environment-variables)
-  - [Deployment](#deployment)
-    - [Docker Deployment](#docker-deployment)
-    - [Manual Deployment](#manual-deployment)
-  - [Usage](#usage)
-  - [Behavior](#behavior)
-  - [Debugging](#debugging)
-  - [Additional information](#additional-information)
+The IOCs are extracted from real-time analyses done by experts from 15,000 companies in ANY.RUN’s Interactive Sandbox. 
 
-## Introduction
+### Connector’s functionality 
 
-ANY.RUN is an interactive online malware sandbox that provides real-time analysis of suspicious files and URLs. Their threat intelligence feed provides STIX-formatted threat data extracted from malware analysis.
+The connector for Threat Intelligence Feeds provides OpenCTI users with simple, automated access to uniquely sourced and accurate indicators of compromise. 
 
-This connector fetches the STIX JSON feed from ANY.RUN API and imports the threat intelligence objects directly into OpenCTI.
+* Enrich OpenCTI artifacts with context from threat investigations
+* Get access to pre-processed IOCs with minimum false positives
+* Detect threats early and prevent attacks using high-quality indicators 
 
-## Installation
+Key SOC benefits 
 
-### Requirements
+Integrate TI Feeds with OpenCTI for an easy access to all the benefits it brings:  
 
-- OpenCTI Platform >= 5.12.32
-- ANY.RUN TI Feed subscription
+* Expanded Coverage: ANY.RUN’s exclusive IOCs come from Memory Dumps, Suricata IDS, in-browser data, and internal threat categorization systems, increasing the chance of detection of the most evasive threats.
+* Reduced Workload: The indicators are pre-processed to avoid false positives and ready to be used for malware analysis or incident investigation.
+* Informed Response: Rich metadata provided for IOCs gives you the context for in-depth threat investigations and faster response.  
 
-## Configuration variables
+### Installation 
 
-There are a number of configuration options, which are set either in `docker-compose.yml` (for Docker) or in `config.yml` (for manual deployment).
+To use the integration, ensure you have an active [ANY.RUN TI Feeds subscription](https://intelligence.any.run/plans/?utm_source=anyrungithub&utm_medium=documentation&utm_campaign=opencti_feeds&utm_content=linktotiplans ).
+ANY.RUN TI Feeds connector for OpenCTI is a standalone Python service that requires access to both the OpenCTI platform and RabbitMQ.
+RabbitMQ credentials and connection parameters are provided automatically by the OpenCTI API, based on the platform’s configuration. 
 
-### OpenCTI environment variables
+You can enable the connector in one of the following ways: 
 
-| Parameter     | config.yml | Docker environment variable | Mandatory | Description                                                                       |
-|---------------|------------|-----------------------------|-----------|-----------------------------------------------------------------------------------|
-| OpenCTI URL   | url        | `OPENCTI_URL`               | Yes       | The URL of the OpenCTI platform. Note: final `/` should be avoided.               |
-| OpenCTI Token | token      | `OPENCTI_TOKEN`             | Yes       | The default admin token set in the OpenCTI platform.                              |
+* Run as a Python process: simply configure the config.yml file with the appropriate values and launch the connector directly.
+* Run in Docker: use the ANY.RUN docker image anyrun/opencti-connector-anyrun-feed:latest 
 
-### Base connector environment variables
+ANY.RUN provides a sample docker-compose.yml file, which can be used as a standalone deployment or integrated into OpenCTI’s main docker-compose.yml. 
 
-| Parameter        | config.yml | Docker environment variable | Default | Mandatory | Description                                                                                                         |
-|------------------|------------|-----------------------------|---------|-----------|--------------------------------------------------------------------------------------------------------------------|
-| Connector ID     | id         | `CONNECTOR_ID`              |         | Yes       | A unique `UUIDv4` identifier for this connector instance.                                                           |
-| Connector Name   | name       | `CONNECTOR_NAME`            |         | Yes       | Name of the connector to be shown in OpenCTI.                                                                       |
-| Connector Scope  | scope      | `CONNECTOR_SCOPE`           | stix2   | Yes       | Supported scope (e.g., `text/html`, `stix2`).                                                                       |
-| Log Level        | log_level  | `CONNECTOR_LOG_LEVEL`       | info    | No        | Determines the verbosity of logs: `debug`, `info`, `warn`, or `error`.                                              |
-| Run Every        | -          | `CONNECTOR_RUN_EVERY`       |         | Yes       | Interval format: `7d`, `12h`, `10m`, `30s` (d=days, h=hours, m=minutes, s=seconds).                                 |
+Note: 
 
-### Connector extra parameters environment variables
+* If you deploy the connector independently, make sure it can reach RabbitMQ on the port defined in your OpenCTI configuration.
+* If you're experiencing issues or require an immediate update, ANY.RUN can provide an updated Docker image upon request. Please contact our support team at support@any.run. 
 
-| Parameter     | config.yml | Docker environment variable | Default                                 | Mandatory | Description                                                                                              |
-|---------------|------------|-----------------------------|-----------------------------------------|-----------|----------------------------------------------------------------------------------------------------------|
-| TI Token      | token      | `ANYRUN_TI_TOKEN`           |                                         | Yes       | ANY.RUN TI Feed credentials (API-Key for demo-feed, Basic for full - type selected automatically).      |
-| TI URL        | url        | `ANYRUN_TI_URL`             | https://api.any.run/v1/feeds/stix.json  | No        | ANY.RUN TI Feed URL.                                                                                     |
+### Requirements 
 
-## Deployment
+* OpenCTI Platform >= 6.7.4
+* ANY.RUN TI Feeds subscription  
 
-### Docker Deployment
+### Generate your API KEY 
 
-Build the Docker image:
+Please use ANY.RUN’s API key without a prefix. Prefixed API keys and Basic Authentication for TI Feeds won’t be supported in future releases.   
+For assistance or access to ANY.RUN’s services, please reach out to our [sales team](https://any.run/enterprise/?utm_source=anyrungithub&utm_medium=documentation&utm_campaign=opencti_feeds&utm_content=linktoenterprise#contact-sales).
+---
 
-```bash
-docker build -t opencti/connector-anyrun-feed:latest .
-```
+### Configuration
 
-Configure the connector in `docker-compose.yml`:
+The connector can be configured with the following variables:  
 
-```yaml
-  connector-anyrun-feed:
-    image: opencti/connector-anyrun-feed:latest
-    environment:
-      - OPENCTI_URL=http://localhost
-      - OPENCTI_TOKEN=ChangeMe
-      - CONNECTOR_ID=ChangeMe
-      - CONNECTOR_NAME=ANY.RUN feed
-      - CONNECTOR_SCOPE=stix2
-      - CONNECTOR_LOG_LEVEL=info
-      - CONNECTOR_RUN_EVERY=1d
-      - ANYRUN_TI_TOKEN=ChangeMe
-    restart: always
-```
 
-Start the connector:
+| Parameter                        | Docker envvar                    | Mandatory | Description                                                                                                                                                                                 |
+|----------------------------------|----------------------------------|-----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `opencti_url`                    | `OPENCTI_URL`                    | Yes       | The URL of the OpenCTI platform. Note that final `/` should be avoided. Example value: `http://opencti:8080`                                                                                |
+| `opencti_token`                  | `OPENCTI_TOKEN`                  | Yes       | The default admin token configured in the OpenCTI platform parameters file. We recommend setting up a separate ``OPENCTI_TOKEN`` named **ANY.RUN** to identify the work of our integrations. |
+| `connector_id`                   | `CONNECTOR_ID`                   | Yes       | A valid arbitrary `UUIDv4` that must be unique for this connector.                                                                                                                          |
+| `connector_name`                 | `CONNECTOR_NAME`                 | Yes       | A connector name to be shown in OpenCTI.                                                                                                                                                    |
+| `connector_scope`                | `CONNECTOR_SCOPE`                | Yes       | Supported scope. E. g., `text/html`.                                                                                                                                                        |
+| `connector_log_level`            | `CONNECTOR_LOG_LEVEL`            | Yes       | The log level for this connector, could be `debug`, `info`, `warn` or `error` (less verbose).                                                                                               |
+| `connector_update_existing_data` | `CONNECTOR_UPDATE_EXISTING_DATA` | Yes       | Update data already ingested into the platform.                                                                                                                                             |
+| `api_key`                        | `ANYRUN_API_KEY`                 | Yes       | ANY.RUN TI Feeds API key. See "Generate your API KEY" section in the README file. Example: WmNfqnpo...2Sjon7mtvm8e                                                                          |
+| `feed_fetch_interval`            | `ANYRUN_FEED_FETCH_INTERVAL`     | Yes       | Specify feed fetch interval in minutes                                                                                                                                                      |
+| `feed_fetch_depth`               | `ANYRUN_FEED_FETCH_DEPTH`        | Yes       | Specify feed fetch depth in days                                                                                                                                                            |
 
-```bash
-docker compose up -d
-```
+## Support
+This is an ANY.RUN’s supported connector. You can write to us for help with integration via [support@any.run](mailto:support@any.run). 
 
-### Manual Deployment
-
-1. Create `config.yml` based on `config.yml.sample`.
-
-2. Install dependencies:
-
-```bash
-pip3 install -r requirements.txt
-```
-
-3. Start the connector:
-
-```bash
-python3 anyrun_feed.py
-```
-
-## Usage
-
-The connector runs automatically at the interval set by `CONNECTOR_RUN_EVERY`. To force an immediate run:
-
-**Data Management → Ingestion → Connectors**
-
-Find the connector and click the refresh button to reset the state and trigger a new data fetch.
-
-## Behavior
-
-The connector fetches the STIX JSON feed from ANY.RUN API and imports the objects directly into OpenCTI.
-
-### Data Flow
-
-```mermaid
-graph LR
-    subgraph ANY.RUN
-        direction TB
-        Feed[STIX JSON Feed]
-    end
-
-    subgraph OpenCTI
-        direction LR
-        STIXObjects[STIX Objects]
-    end
-
-    Feed --> STIXObjects
-```
-
-### Entity Mapping
-
-The connector imports native STIX 2.1 objects from ANY.RUN feed. Common entity types include:
-
-| ANY.RUN Data         | OpenCTI Entity      | Description                                      |
-|----------------------|---------------------|--------------------------------------------------|
-| Malware samples      | File                | File hashes and metadata from analysis           |
-| Network indicators   | Domain/IP/URL       | Network observables extracted from samples       |
-| Malware families     | Malware             | Identified malware family information            |
-| Attack patterns      | Attack Pattern      | TTPs observed during analysis                    |
-
-### Processing Details
-
-1. **API Authentication**: Supports both API-Key (demo) and Basic (full) authentication - automatically detected
-2. **Native STIX Import**: Data is already in STIX format, directly imported to OpenCTI
-3. **State Management**: Tracks last run to avoid duplicate processing
-
-## Debugging
-
-Enable verbose logging:
-
-```env
-CONNECTOR_LOG_LEVEL=debug
-```
-
-Log output includes:
-- Feed fetch status
-- Number of STIX objects received
-- Bundle sending status
-
-## Additional information
-
-- **Authentication Types**:
-  - API-Key: For demo feed access
-  - Basic: For full feed access
-  - The connector automatically detects the correct authentication method
-- **Feed Format**: Native STIX 2.1 JSON format
-- **Interval Format**: Use `1d` for daily, `12h` for twice daily, etc.
+Contact us for a quote or demo via [this form](https://app.any.run/contact-us/?utm_source=anyrungithub&utm_medium=documentation&utm_campaign=opencti_feeds&utm_content=linktocontactus). 
