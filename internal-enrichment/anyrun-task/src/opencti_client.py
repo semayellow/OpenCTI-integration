@@ -156,7 +156,7 @@ class OpenCTI:
                         self._helper.api.stix_core_relationship.create(
                             toId=new_observable['id'],
                             fromId=self._opencti_entity['id'],
-                            confidence=90,
+                            confidence=100,
                             createdBy=self._organization['id'],
                             relationship_type='related-to',
                             description=ioc['category'],
@@ -183,7 +183,7 @@ class OpenCTI:
                     self._helper.api.stix_core_relationship.create(
                         toId=self._opencti_entity['id'],
                         fromId=indicator['id'],
-                        confidence=90,
+                        confidence=100,
                         createdBy=self._organization['id'],
                         relationship_type='based-on',
                         description=ioc['category'],

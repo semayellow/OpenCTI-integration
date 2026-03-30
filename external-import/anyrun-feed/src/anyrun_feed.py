@@ -60,13 +60,13 @@ class AnyrunFeed:
         :param is_delta: Collect new indicators over a period of time
         """
         for raw_feeds in FeedsIterator.taxii_stix(
-                connector,
-                chunk_size=self._config.FEEDS_CHUNK_LIMIT,
-                limit=self._config.FEEDS_CHUNK_LIMIT,
-                match_version='all',
-                match_type='indicator',
-                modified_after=self._get_interval(),
-                get_delta=is_delta,
+            connector,
+            chunk_size=self._config.FEEDS_CHUNK_LIMIT,
+            limit=self._config.FEEDS_CHUNK_LIMIT,
+            match_version='all',
+            match_type='indicator',
+            modified_after=self._get_interval(),
+            get_delta=is_delta,
         ):
             for feed in raw_feeds:
                 feed_type, feed_value = self.extract_feed_data(feed)

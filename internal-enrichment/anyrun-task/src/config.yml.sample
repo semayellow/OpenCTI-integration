@@ -44,7 +44,7 @@ anyrun_windows_env:
 
 anyrun_linux_env:
   os_type: "linux" # Type of OS. Must be linux
-  obj_ext_startfolder: "temp" # Start object from. Supports: desktop, home, downloads, appdata, temp, windows, root.
+  obj_ext_startfolder: "temp" # Start object from. Supports: desktop, home, downloads, temp.
   obj_ext_cmd: "" # Optional command-line arguments for the analyzed object. Use an empty string ("") to apply the default behavior.
   run_as_root: true # Run file with superuser privileges.
   obj_ext_browser: "Google Chrome" # Browser name. Supports: Google Chrome, Mozilla Firefox. Only for the Url analysis.

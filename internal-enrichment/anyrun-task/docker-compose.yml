@@ -41,7 +41,7 @@ services:
 
       # Windows analysis environment.
       - ANYRUN_OS_TYPE=windows # Type of OS. Must be windows
-      - ANYRUN_ENV_VERSION=10 # Version of OS. Supports: 7, 10, 11.
+      - ANYRUN_ENV_VERSION=10 # Version of OS. Supports: 7, 10, 11
       - ANYRUN_ENV_BITNESS=64 # Bitness of Operation System. Supports 32, 64.
       - ANYRUN_ENV_TYPE=complete # Environment preset type. You can select **development** env for OS Windows 10 x64. For all other cases, **complete** env is required.
       - ANYRUN_OBJ_EXT_STARTFOLDER=temp # Supports: desktop, home, downloads, appdata, temp, windows, root.
@@ -52,7 +52,7 @@ services:
 
       # Linux analysis environment.
       # - ANYRUN_OS_TYPE=linux # Type of OS. Must be linux
-      # - ANYRUN_OBJ_EXT_STARTFOLDER=temp # Start object from. Supports: desktop, home, downloads, appdata, temp, windows, root.
+      # - ANYRUN_OBJ_EXT_STARTFOLDER=temp # Start object from. Supports: desktop, home, downloads, temp.
       # - ANYRUN_OBJ_EXT_CMD="" # Optional command-line arguments for the analyzed object. Use an empty string ("") to apply the default behavior.
       # - ANYRUN_RUN_AS_ROOT=true # Run file with superuser privileges.
       # Only for the Url analysis.
