@@ -72,7 +72,7 @@ You can enable the connector in one of the following ways:
 ### Requirements
 
 - OpenCTI Platform >= 6.0.0
-- ANY.RUN "Enterprise" plan or higher (API access required)
+- ANY.RUN "Enterprise Suite" plan or higher (API access required)
 
 ### Generate API-KEY
 
@@ -362,7 +362,7 @@ Log output includes:
 - **Analysis Time**: Sandbox analysis typically takes 1-3 minutes depending on the sample
 - **Task Timer**: Configure `ANYRUN_OPT_TIMEOUT` based on expected analysis time
 - **Privacy Settings**: Use `bylink` or `team` for sensitive samples
-- **Enterprise Plan Required**: API access requires at minimum the "Enterprise" subscription plan
+- **Enterprise Suite Plan Required**: API access requires at minimum the "Enterprise Suite" subscription plan
 - **Rate Limits**: API calls are subject to ANY.RUN rate limits based on subscription tier
 - **Organization Identity**: The connector creates an "ANY.RUN" organization identity for attribution
 

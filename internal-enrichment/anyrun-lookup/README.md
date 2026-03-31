@@ -65,7 +65,7 @@ You can enable the connector in one of the following ways:
 ### Requirements
 
 - OpenCTI Platform >= 6.0.0
-- ANY.RUN "Hunter" plan or higher (API access required)
+- ANY.RUN "Enterprise Suite" plan or higher (API access required)
 
 ### Generate API-KEY
 
@@ -184,7 +184,7 @@ graph LR
         
     end
 
-    subgraph ANY.RUN Sandbox
+    subgraph ANY.RUN TI Lookup
         Intelligence[Threat Intelligence]
     end
 
